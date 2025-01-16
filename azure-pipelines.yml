@@ -1,0 +1,17 @@
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'  # or 'ubuntu-latest' or 'macOS-latest'
+
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.13.1'
+    addToPath: true
+  displayName: 'Setup Python'
+
+- script: |
+    python --version
+    python Change_Parameter.py
+  displayName: 'Run Python Script'
