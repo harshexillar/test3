@@ -4,48 +4,26 @@ trigger:
 pool:
   name: Default
 
-variables:
-  pythonVersion: '3.13.1'
-  pythonPath: 'C:\Users\Exill\AppData\Local\Programs\Python\Python313\python.exe'  # You'll need to update this to your actual Python path
+steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.13.1'
+    addToPath: true
+  displayName: 'Use Python 3.13.1'
 
-jobs:
-- job: RunPythonScript
-  displayName: "Run Python Script on Self-Hosted Agent"
-  steps:
-  - powershell: |
-      $customPythonPath = "C:\Python313\python.exe"  # Update this with your actual Python path
-      if (Test-Path $customPythonPath) {
-        Write-Host "Using custom Python path: $customPythonPath"
-        Write-Host "##vso[task.setvariable variable=PYTHON_PATH]$customPythonPath"
-      } else {
-        $systemPythonPath = (Get-Command python -ErrorAction SilentlyContinue).Path
-        if ($systemPythonPath) {
-          Write-Host "Using system Python path: $systemPythonPath"
-          Write-Host "##vso[task.setvariable variable=PYTHON_PATH]$systemPythonPath"
-        } else {
-          Write-Host "##vso[task.logissue type=error]Python installation not found!"
-          exit 1
-        }
-      }
-      
-      # Verify Python version
-      $pythonVersion = & "$customPythonPath" -c "import sys; print('.'.join(map(str, sys.version_info[:3])))"
-      Write-Host "Detected Python version: $pythonVersion"
-      if ($pythonVersion -like "3.13.1*") {
-        Write-Host "Correct Python version found"
-      } else {
-        Write-Host "##vso[task.logissue type=warning]Python version mismatch. Expected 3.13.1, found $pythonVersion"
-      }
-    displayName: "Set Python Path and Check Version"
-    failOnStderr: true
+- powershell: |
+    $pythonLocation = Get-Command python | Select-Object -ExpandProperty Source
+    Write-Host "Python Location: $pythonLocation"
+    python --version
+    Write-Host "##vso[task.setvariable variable=PYTHON_PATH]$pythonLocation"
+  displayName: 'Get Python Info'
 
-  - script: |
-      echo "Running the Python script..."
-      "$(PYTHON_PATH)" Change_Parameter.py
-    displayName: "Run Python Script"
-    continueOnError: false
+- script: |
+    echo "Running Python script..."
+    python Change_Parameter.py
+  displayName: 'Run Python Script'
 
-  - script: |
-      echo "Pipeline completed successfully."
-    displayName: "Finalize Pipeline"
-    condition: always()
+- script: |
+    echo "Pipeline completed successfully."
+  displayName: "Finalize Pipeline"
+  condition: always()
