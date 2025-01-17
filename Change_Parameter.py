@@ -14,7 +14,7 @@ app_id = "cc1930f0-1a02-4691-97c5-776ebfca744d"  # Your Azure AD App Registratio
 tenant_id = "e5f2178a-ceaa-4d58-9c63-906f15e01565"
 app_secret = "Qbk8Q~eT7OzgItTBUi2AhdCZ_wYVZEVdWevigbA~"
 
-excel_file = r"https://docs.google.com/spreadsheets/d/1zOw1PLWotIG1tGypjoorg-oY-s_cGWzN/edit?usp=sharing&ouid=101083314709646174135&rtpof=true&sd=true"
+excel_file = r"C:\Users\Exill\Downloads\Truespot 1.xlsx"
 group_id = "2a93b9b2-eddd-46d2-993d-cb0e2df89ca1"
 # -----------------------------------------------------------
 
